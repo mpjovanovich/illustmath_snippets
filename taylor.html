@@ -1,0 +1,35 @@
+<!-- 
+This snippet will run in a Jupyter notebook cell, so we're just putting in the
+essential pieces of the HTML document. The JS will populate the rest of the
+content.
+-->
+<head>
+    <!-- data-main should point to the entry point for the 'main application' script. -->
+    <script
+        data-main="taylor_app.js"
+        src="https://requirejs.org/docs/release/2.3.6/minified/require.js"
+    ></script>
+</head>
+<body>
+    <div style="width: fit-content">
+        <h3 id="chart_taylor_title" style="text-align: center"></h3>
+        <div id="chart_taylor"></div>
+        <div
+            style="
+                display: flex;
+                justify-content: center;
+                width: fit-content;
+                margin: 0 auto;
+            "
+        >
+            <span style="font-weight: bold; margin-right: 20px">n:</span>
+            <div
+                id="chart_taylor_slider"
+                style="width: 300px; margin: auto"
+            ></div>
+            <span id="n_value" style="font-weight: bold; margin-left: 20px"
+                >()</span
+            >
+        </div>
+    </div>
+</body>
