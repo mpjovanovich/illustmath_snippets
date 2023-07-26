@@ -1,7 +1,5 @@
 // TODO: legend on right of graph.
 // TODO: Add TeX library to render function names:
-// https://www.mathjax.org/
-// https://cdnjs.com/libraries/mathjax
 // TODO: Add 'a' parameter for Taylor.
 
 // Closest eCharts example: https://echarts.apache.org/examples/en/editor.html?c=line-stack
@@ -57,8 +55,10 @@ requirejs.config({
         jqueryui: '//code.jquery.com/ui/1.13.1/jquery-ui.min',
         echarts: '//cdnjs.cloudflare.com/ajax/libs/echarts/5.4.2/echarts.min',
         mathjs: '//cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.2/math.min',
-        mathjax:
-            '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML',
+        katex:
+            // '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML',
+            // '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/config/TeX-MML-AM_CHTML-full.min',
+            '//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min',
         test: './taylor_graph',
     },
 });
@@ -66,12 +66,12 @@ requirejs.config({
 /* ****************************************************************
  * APPLICATION ENTRY POINT
  * ****************************************************************/
-require(['jquery', 'jqueryui', 'echarts', 'mathjs', 'mathjax', 'test'], (
+require(['jquery', 'jqueryui', 'echarts', 'mathjs', 'katex', 'test'], (
     $,
     _,
     echarts,
     math,
-    mathjax,
+    katex,
     test
 ) => {
     /* ****************************************************************
@@ -253,8 +253,14 @@ require(['jquery', 'jqueryui', 'echarts', 'mathjs', 'mathjax', 'test'], (
      * UI Controls
      * ******************************************************************************/
     $(() => {
+        const titleExpression = katex.renderToString('e^x, a=0', {
+            throwOnError: false,
+        });
         $('#chart_taylor_title').html(
-            'Taylor Series Approximation: \\(e^x, a=0\\) (Maclauren Series)'
+            // 'Taylor Series Approximation: \\(e^x, a=0\\) (Maclauren Series)'
+            'Taylor Series Approximation: ' +
+                titleExpression +
+                ' (Maclauren Series)'
         );
 
         $('#chart_taylor_slider').slider({

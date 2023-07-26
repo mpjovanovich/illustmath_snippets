@@ -3,6 +3,7 @@ This snippet will run in a Jupyter notebook cell, so we're just putting in the
 essential pieces of the HTML document. The JS will populate the rest of the
 content.
 -->
+<!DOCTYPE html>
 <head>
     <!-- 
         TODO: when we drop this into Jupyter, we'll need to copy in that script that gets the base file path.
@@ -14,6 +15,18 @@ content.
         rel="stylesheet"
         href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
     />
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+        integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
+        crossorigin="anonymous"
+    />
+    <style>
+        /* Default was 1.1; a little too big. */
+        .katex {
+            font-size: 1em;
+        }
+    </style>
     <script
         data-main="taylor_app.js"
         src="https://requirejs.org/docs/release/2.3.6/minified/require.js"
