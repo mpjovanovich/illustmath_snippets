@@ -59,7 +59,7 @@ requirejs.config({
         mathjs: '//cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.2/math.min',
         mathjax:
             '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML',
-        test: './test_module',
+        test: './taylor_graph',
     },
 });
 
@@ -79,7 +79,7 @@ require(['jquery', 'jqueryui', 'echarts', 'mathjs', 'mathjax', 'test'], (
      * ****************************************************************/
     // TODO: extract this section to its own JS module/file. It's too big to go in here.
     // TODO: Add more functions later.
-    console.log(mathjax);
+    // TODO: fix - TeX for the terms is not rendering until page refresh. Queue not working anymore.
 
     const functionDefinitions = {
         e_pow_x: {
@@ -256,9 +256,6 @@ require(['jquery', 'jqueryui', 'echarts', 'mathjs', 'mathjax', 'test'], (
         $('#chart_taylor_title').html(
             'Taylor Series Approximation: \\(e^x, a=0\\) (Maclauren Series)'
         );
-
-        // DEBUG
-        console.log($('#chart_taylor_slider'));
 
         $('#chart_taylor_slider').slider({
             create: (event, ui) => {

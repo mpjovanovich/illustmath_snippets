@@ -4,7 +4,16 @@ essential pieces of the HTML document. The JS will populate the rest of the
 content.
 -->
 <head>
+    <!-- 
+        TODO: when we drop this into Jupyter, we'll need to copy in that script that gets the base file path.
+        Then we can just call the one single init script and it'll do everything - no need for a JS cell below
+        the HTML cell.
+    -->
     <!-- data-main should point to the entry point for the 'main application' script. -->
+    <link
+        rel="stylesheet"
+        href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
+    />
     <script
         data-main="taylor_app.js"
         src="https://requirejs.org/docs/release/2.3.6/minified/require.js"
