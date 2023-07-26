@@ -1,4 +1,5 @@
 // TODO: this will have the graphing functionality for the Taylor series.
+// Right now everything is in 'taylor_app'
 // define(() => {
 //     const testFunction = (name) => {
 //         return (
@@ -12,4 +13,4 @@
 //         testOutput: testOutput,
 //         testFunction,
 //     };
-// });
+// 1});
