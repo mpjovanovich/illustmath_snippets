@@ -1,3 +1,7 @@
+// New plan:
+// Abandon module system. It's become a time sink.
+// We will just drop the whole application code into a Jupyter cell.
+
 // TODO: legend on right of graph.
 // TODO: Add TeX library to render function names:
 // TODO: Add 'a' parameter for Taylor.
