@@ -53,7 +53,7 @@ const axisOptions = {
 /* ****************************************************************
  * INCLUDED LIBRARIES
  * ****************************************************************/
-requirejs.config({
+require.config({
     paths: {
         jquery: '//code.jquery.com/jquery-3.7.0.min',
         jqueryui: '//code.jquery.com/ui/1.13.1/jquery-ui.min',
