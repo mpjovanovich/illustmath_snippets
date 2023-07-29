@@ -14,7 +14,6 @@ define(['mathjs'], (mathjs) => {
         // This one is public so that it's exposed in the API.
         functionDefinitions = {
             e_pow_x: {
-                name: 'e_pow_x',
                 fx: (x) => mathjs.pow(mathjs.e, x),
                 terms: [
                     (x) => 1.0, // 0th term
@@ -23,7 +22,7 @@ define(['mathjs'], (mathjs) => {
                     (x) => mathjs.pow(x, 3.0) / mathjs.factorial(3),
                     (x) => mathjs.pow(x, 4.0) / mathjs.factorial(4),
                 ],
-                // TODO: add TeX description for terms
+                tex: 'e^x',
             },
         };
 
@@ -58,7 +57,7 @@ define(['mathjs'], (mathjs) => {
 
             if (
                 !this.#functionDefinition ||
-                functionDefinition.name !== this.#functionDefinition.name
+                functionDefinition.tex !== this.#functionDefinition.tex
             ) {
                 this.#functionDefinition = functionDefinition;
                 functionChanged = true;
