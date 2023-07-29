@@ -1,6 +1,6 @@
-// TODO: legend on right of graph.
-// TODO: Add TeX library to render function names:
+// TODO: diff table below graph. This can show the function derivative names and values.
 // TODO: Add 'a' parameter for Taylor.
+// TODO: legend on right of graph with function name and degree?
 
 /* ****************************************************************
  * INCLUDED LIBRARIES
@@ -59,9 +59,10 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
      * UI Controls
      * ******************************************************************************/
     $(() => {
-        const titleExpression = katex.renderToString('e^x, a=0', {
-            throwOnError: false,
-        });
+        const titleExpression = katex.renderToString(
+            `${selectedFunction.tex}, a=0`,
+            { throwOnError: false }
+        );
 
         $('#chart_taylor_title').html(
             'Taylor Series Approximation: ' +
