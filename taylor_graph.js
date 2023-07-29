@@ -31,7 +31,7 @@ define(['mathjs'], (mathjs) => {
             y: { min: 0, max: 10 },
         };
 
-        #TICKS_PER_UNIT = 0.1;
+        TICKS_PER_UNIT = 0.1;
         #VALUE_PRECISION = 4;
 
         /* ****************************************************************
@@ -41,6 +41,10 @@ define(['mathjs'], (mathjs) => {
         #degree;
         #functionDefinition;
         #option;
+
+        getChartData() {
+            return this.#chartData;
+        }
 
         /* ****************************************************************
          * CONSTRUCTOR
@@ -92,7 +96,7 @@ define(['mathjs'], (mathjs) => {
             for (
                 let x = this.#GRID_DIMS.x.min;
                 x <= this.#GRID_DIMS.x.max;
-                x += this.#TICKS_PER_UNIT
+                x += this.TICKS_PER_UNIT
             ) {
                 x = mathjs.round(x, 1); // The binary addition from the add makes the results off by a little bit - round them back.
                 xValues.push(x);

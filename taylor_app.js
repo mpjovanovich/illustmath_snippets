@@ -1,6 +1,7 @@
 // TODO: diff table below graph. This can show the function derivative names and values.
 // TODO: Add 'a' parameter for Taylor.
 // TODO: legend on right of graph with function name and degree?
+// TODO: this app is utilizing memory poorly.
 
 /* ****************************************************************
  * INCLUDED LIBRARIES
@@ -59,6 +60,54 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
      * UI Controls
      * ******************************************************************************/
     $(() => {
+        // DEBUG
+        const chartData = taylorChart.getChartData();
+        console.log(chartData);
+
+        // TODO: Extract to function. Can go in a new module for charting.
+        // Use a JS library to prettify the table after its made.
+        var table = document.createElement('table');
+
+        var tableHead = document.createElement('thead');
+        tableHead.appendChild(document.createTextNode('Values'));
+        table.appendChild(tableHead);
+
+        var tableBody = document.createElement('tbody');
+        var row = document.createElement('tr');
+        var data = chartData.xValues;
+        var increment = Math.floor(1 / taylorChart.TICKS_PER_UNIT);
+
+        for (var i = 0; i < data.length; i += increment) {
+            var cell = document.createElement('td');
+            cell.appendChild(document.createTextNode(data[i]));
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+
+        data = chartData.fnSeries.data;
+        row = document.createElement('tr');
+        for (var i = 0; i < data.length; i += increment) {
+            var cell = document.createElement('td');
+            cell.appendChild(document.createTextNode(data[i]));
+            row.appendChild(cell);
+        }
+        tableBody.appendChild(row);
+
+        // chartData.xValues.forEach((rowData) => {
+        //     var row = document.createElement('tr');
+
+        //     // rowData.forEach(function (cellData) {
+        //     //     var cell = document.createElement('td');
+        //     //     cell.appendChild(document.createTextNode(cellData));
+        //     //     row.appendChild(cell);
+        //     // });
+
+        //     tableBody.appendChild(row);
+        // });
+
+        table.appendChild(tableBody);
+        $('#table_taylor')[0].appendChild(table);
+
         const titleExpression = katex.renderToString(
             `${selectedFunction.tex}, a=0`,
             { throwOnError: false }
