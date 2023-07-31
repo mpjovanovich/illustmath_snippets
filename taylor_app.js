@@ -64,52 +64,30 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
         const chartData = taylorChart.getChartData();
         console.log(chartData);
 
-        // TODO: Extract to function. Can go in a new module for charting.
-        // Use a JS library to prettify the table after its made.
-        var table = document.createElement('table');
+        // // TODO: Extract to function. Can go in a new module for charting.
+        // // Use a JS library to prettify the table after its made.
+        let tbody = $('<tbody>');
 
-        var tableHead = document.createElement('thead');
-        tableHead.appendChild(document.createTextNode('Values'));
-        table.appendChild(tableHead);
+        // // Header row
+        let dataSet = chartData.x;
+        let tr = $('<tr>');
+        tr.append($('<th>'));
+        dataSet.data.forEach((x) => {
+            tr.append($('<th>', { scope: 'col', text: x }));
+        });
+        tbody.append(tr);
 
-        var tableBody = document.createElement('tbody');
-        var row = document.createElement('tr');
-        var data = chartData.xValues;
-        var increment = Math.floor(1 / taylorChart.TICKS_PER_UNIT);
+        addChartRow(chartData.fx).appendTo(tbody);
+        addChartRow(chartData.sum).appendTo(tbody);
+        chartData.terms.forEach((term) => {
+            addChartRow(term).appendTo(tbody);
+        });
 
-        for (var i = 0; i < data.length; i += increment) {
-            var cell = document.createElement('td');
-            cell.appendChild(document.createTextNode(data[i]));
-            row.appendChild(cell);
-        }
-        tableBody.appendChild(row);
-
-        data = chartData.fnSeries.data;
-        row = document.createElement('tr');
-        for (var i = 0; i < data.length; i += increment) {
-            var cell = document.createElement('td');
-            cell.appendChild(document.createTextNode(data[i]));
-            row.appendChild(cell);
-        }
-        tableBody.appendChild(row);
-
-        // chartData.xValues.forEach((rowData) => {
-        //     var row = document.createElement('tr');
-
-        //     // rowData.forEach(function (cellData) {
-        //     //     var cell = document.createElement('td');
-        //     //     cell.appendChild(document.createTextNode(cellData));
-        //     //     row.appendChild(cell);
-        //     // });
-
-        //     tableBody.appendChild(row);
-        // });
-
-        table.appendChild(tableBody);
-        $('#table_taylor')[0].appendChild(table);
+        // Append the table body to the existing HTML table.
+        $('#table_taylor')[0].append(tbody[0]);
 
         const titleExpression = katex.renderToString(
-            `${selectedFunction.tex}, a=0`,
+            `${selectedFunction.fx.tex}, a=0`,
             { throwOnError: false }
         );
 
@@ -137,4 +115,16 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
             value: selectedFunction.terms.length - 1,
         });
     });
+
+    function addChartRow(dataSet) {
+        let tr = $('<tr>');
+        tr.append(
+            $('<th>', { scope: 'row', text: dataSet.tex })
+            // $('<th>', { scope: 'row', text: katex.renderToString(dataSet.tex) })
+        );
+        dataSet.data.forEach((x) => {
+            tr.append($('<td>', { text: x }));
+        });
+        return tr;
+    }
 });

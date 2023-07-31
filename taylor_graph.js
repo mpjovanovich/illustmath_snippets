@@ -14,15 +14,26 @@ define(['mathjs'], (mathjs) => {
         // This one is public so that it's exposed in the API.
         functionDefinitions = {
             e_pow_x: {
-                fx: (x) => mathjs.pow(mathjs.e, x),
+                fx: this.#createFunctionDefinition(
+                    (x) => mathjs.pow(mathjs.e, x),
+                    'e^x'
+                ),
                 terms: [
-                    (x) => 1.0, // 0th term
-                    (x) => x / 1.0, // 1st term
-                    (x) => mathjs.pow(x, 2.0) / mathjs.factorial(2), // 2nd term...
-                    (x) => mathjs.pow(x, 3.0) / mathjs.factorial(3),
-                    (x) => mathjs.pow(x, 4.0) / mathjs.factorial(4),
+                    this.#createFunctionDefinition((x) => 1.0, '1'),
+                    this.#createFunctionDefinition((x) => x / 1.0, 'x/1!'),
+                    this.#createFunctionDefinition(
+                        (x) => mathjs.pow(x, 2.0) / mathjs.factorial(2),
+                        'x^2/2!'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x) => mathjs.pow(x, 3.0) / mathjs.factorial(3),
+                        'x^3/3!'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x) => mathjs.pow(x, 4.0) / mathjs.factorial(4),
+                        'x^4/4!'
+                    ),
                 ],
-                tex: 'e^x',
             },
         };
 
@@ -31,7 +42,7 @@ define(['mathjs'], (mathjs) => {
             y: { min: 0, max: 10 },
         };
 
-        TICKS_PER_UNIT = 0.1;
+        #TICKS_PER_UNIT = 0.1;
         #VALUE_PRECISION = 4;
 
         /* ****************************************************************
@@ -42,19 +53,56 @@ define(['mathjs'], (mathjs) => {
         #functionDefinition;
         #option;
 
-        getChartData() {
-            return this.#chartData;
-        }
-
-        /* ****************************************************************
-         * CONSTRUCTOR
-         * ****************************************************************/
-        // constructor() {
-        // }
-
         /* ****************************************************************
          * PUBLIC METHODS
          * ****************************************************************/
+        // This method returns a set of arrays with a friendly api for consumption
+        // by the client.
+        getChartData = () => {
+            // Build an index array for subset that will form the return elements.
+            let returnObject = {
+                // TODO: export only a subset of the data.
+                x: { tex: 'x', data: [] },
+                fx: {
+                    tex: `f(x), ${this.#functionDefinition.fx.tex}`,
+                    data: [],
+                },
+                sum: { tex: 'Sum of Terms, \\epsilon{}', data: [] },
+                delta: { tex: 'Delta, \\delta{f(x)-}', data: [] },
+                terms: [],
+            };
+            for (let i = 2; i < this.#option.series.length; i++) {
+                returnObject.terms.push({
+                    tex: this.#functionDefinition.terms[i - 2].tex,
+                    data: [],
+                });
+            }
+
+            // This was chosen arbitrarily.
+            let increment = Math.floor(1 / this.#TICKS_PER_UNIT);
+            for (
+                let i = 0;
+                i < this.#chartData.xValues.length;
+                i += increment
+            ) {
+                returnObject.x.data.push(this.#chartData.xValues[i]);
+                returnObject.fx.data.push(this.#option.series[0].data[i]);
+                returnObject.sum.data.push(this.#option.series[1].data[i]);
+                returnObject.delta.data.push(
+                    this.#option.series[0].data[i] -
+                        this.#option.series[1].data[i]
+                );
+                for (let j = 2; j < this.#option.series.length; j++) {
+                    let termIndex = j - 2;
+                    returnObject.terms[termIndex].data.push(
+                        this.#option.series[j].data[i]
+                    );
+                }
+            }
+
+            return returnObject;
+        };
+
         generateChart = (functionDefinition, degree) => {
             let functionChanged = false;
             let degreeChanged = false;
@@ -86,7 +134,11 @@ define(['mathjs'], (mathjs) => {
         /* ****************************************************************
          * PRIVATE METHODS
          * ****************************************************************/
-        #generateChartData = () => {
+        #createFunctionDefinition(fn, tex) {
+            return { fn, tex };
+        }
+
+        #generateChartData() {
             // let seriesIndex = 0;
             let xValues = [];
             let termsSeries = [];
@@ -96,7 +148,7 @@ define(['mathjs'], (mathjs) => {
             for (
                 let x = this.#GRID_DIMS.x.min;
                 x <= this.#GRID_DIMS.x.max;
-                x += this.TICKS_PER_UNIT
+                x += this.#TICKS_PER_UNIT
             ) {
                 x = mathjs.round(x, 1); // The binary addition from the add makes the results off by a little bit - round them back.
                 xValues.push(x);
@@ -107,7 +159,7 @@ define(['mathjs'], (mathjs) => {
             xValues.forEach((x) =>
                 curData.push(
                     mathjs.round(
-                        this.#functionDefinition.fx(x),
+                        this.#functionDefinition.fx.fn(x),
                         this.#VALUE_PRECISION
                     )
                 )
@@ -135,7 +187,7 @@ define(['mathjs'], (mathjs) => {
                 curData = [];
 
                 xValues.forEach((x) =>
-                    curData.push(mathjs.round(f(x), this.#VALUE_PRECISION))
+                    curData.push(mathjs.round(f.fn(x), this.#VALUE_PRECISION))
                 );
 
                 termsSeries.push({
@@ -151,9 +203,10 @@ define(['mathjs'], (mathjs) => {
                 termsSeries,
                 xValues,
             };
-        };
+        }
 
-        #getChartSeries = (charData, degree) => {
+        #getChartSeries(degree) {
+            // TODO: export a consumable snapshot of the chart data for the client.
             const slicedTerms = this.#chartData.termsSeries.slice(
                 0,
                 degree + 1
@@ -164,9 +217,9 @@ define(['mathjs'], (mathjs) => {
                 this.#getSumSeries(slicedTerms),
                 ...slicedTerms
             );
-        };
+        }
 
-        #getSumSeries = (termsSeries) => {
+        #getSumSeries(termsSeries) {
             let sum = new Array(termsSeries[0].data.length).fill(0);
             termsSeries.forEach((t) => {
                 for (let x = 0; x < t.data.length; x++) {
@@ -192,9 +245,9 @@ define(['mathjs'], (mathjs) => {
                 showSymbol: false,
                 type: 'line',
             };
-        };
+        }
 
-        #setChartOption = (chartData, degree) => {
+        #setChartOption(chartData, degree) {
             this.#option = {
                 animation: false,
                 grid: {
@@ -214,12 +267,12 @@ define(['mathjs'], (mathjs) => {
                     name: 'y',
                     type: 'value',
                 },
-                series: this.#getChartSeries(chartData, degree),
+                series: this.#getChartSeries(degree),
                 tooltip: {
                     trigger: 'axis',
                 },
             };
-        };
+        }
     }
 
     /* ****************************************************************
