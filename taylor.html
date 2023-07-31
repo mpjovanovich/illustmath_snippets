@@ -27,6 +27,40 @@ content.
         .katex {
             font-size: 1em;
         }
+        table {
+            width: 100%;
+            color: #333;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            text-align: left;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        table th {
+            background-color: #9c9c9c;
+            font-weight: bold;
+            padding: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-top: 1px solid #fff;
+            border-bottom: 1px solid #ccc;
+        }
+        table tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover td {
+            background-color: #ffedcc;
+        }
+        table td {
+            background-color: #fff;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            font-weight: bold;
+        }
     </style>
     <script
         data-main="taylor_app.js"
@@ -55,7 +89,7 @@ content.
             >
         </div>
     </div>
-    <table id="table_taylor">
+    <table id="table_taylor" style="margin-top: 40px; margin-left: 20px">
         <caption>
             This is the caption.
         </caption>
