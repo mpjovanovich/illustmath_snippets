@@ -43,19 +43,34 @@ content.
             >
                 <span style="font-weight: bold; margin-right: 20px">n:</span>
                 <div
-                    id="chart_taylor_slider"
+                    id="chart_taylor_slider_n"
+                    class="slider"
                     style="width: 300px; margin: auto"
                 ></div>
                 <span id="n_value" style="font-weight: bold; margin-left: 20px"
                     >()</span
                 >
             </div>
+            <div
+                style="
+                    display: flex;
+                    justify-content: center;
+                    width: fit-content;
+                    margin: 0 auto;
+                "
+            >
+                <span style="font-weight: bold; margin-right: 20px">a:</span>
+                <div
+                    id="chart_taylor_slider_a"
+                    class="slider"
+                    style="width: 300px; margin: auto"
+                ></div>
+                <span id="a_value" style="font-weight: bold; margin-left: 20px"
+                    >()</span
+                >
+            </div>
         </div>
         <table id="table_taylor">
-            <!-- 
-                This can't go in Jupyter - they have some junk that opens a scrolling window 
-                if the html is too long. 
-            -->
             <caption>
                 The 'n' slider can be used to adjust the number of terms in the
                 Taylor series.

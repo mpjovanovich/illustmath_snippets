@@ -1,4 +1,3 @@
-// TODO: Add 'a' parameter for Taylor.
 define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
     $,
     _,
@@ -124,7 +123,7 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
             ///////////////////////////////
             // Render the chart title.
             ///////////////////////////////
-            const titleExpression = katex.renderToString(
+            let titleExpression = katex.renderToString(
                 `${selectedFunction.fx.tex}, a=0`,
                 { throwOnError: false }
             );
@@ -137,7 +136,36 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
             ///////////////////////////////
             // Set up the sliders, and rig up events.
             ///////////////////////////////
-            $('#chart_taylor_slider').slider({
+            $('#chart_taylor_slider_a').slider({
+                create: (event, ui) => {
+                    $('#a_value').html('(' + (0).toString() + ')');
+                },
+                max: 4,
+                min: 0,
+                slide: (event, ui) => {
+                    const sliderVal = ui.value;
+                    $('#a_value').html('(' + sliderVal + ')');
+
+                    // Update the chart title.
+                    titleExpression = katex.renderToString(
+                        `${selectedFunction.fx.tex}, a=${sliderVal}`,
+                        { throwOnError: false }
+                    );
+
+                    $('#chart_taylor_title').html(
+                        'Taylor Series Approximation: ' + titleExpression //+
+                    );
+                    if (sliderVal == 0) {
+                        $('#chart_taylor_title').html(
+                            $('#chart_taylor_title').html() +
+                                ' (Maclauren Series)'
+                        );
+                    }
+                },
+                step: 1,
+                value: 0,
+            });
+            $('#chart_taylor_slider_n').slider({
                 create: (event, ui) => {
                     $('#n_value').html(
                         '(' +
