@@ -27,6 +27,63 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
     katex,
     taylor
 ) => {
+    init($, _, echarts, katex, taylor);
+});
+
+function addChartRow(katex, dataSet) {
+    let tr = $('<tr>');
+    tr.append(
+        $('<th>', { scope: 'row' }).append(
+            $(
+                katex.renderToString(dataSet.texLabel, {
+                    throwOnError: false,
+                })
+            )
+        )
+    );
+    tr.append(
+        $('<th>', { scope: 'row' }).append(
+            $(
+                katex.renderToString(dataSet.texValue, {
+                    throwOnError: false,
+                })
+            )
+        )
+    );
+
+    dataSet.data.forEach((x) => {
+        tr.append($('<td>', { text: x }));
+    });
+    return tr;
+}
+
+function buildTable(taylorChart, katex) {
+    const chartData = taylorChart.getChartData();
+    $('#table_taylor').empty();
+
+    // Header row - x values
+    let tbody = $('<tbody>');
+    let dataSet = chartData.x;
+    let tr = $('<tr>');
+    tr.append($('<th>'));
+    tr.append($('<th>'));
+    dataSet.data.forEach((x) => {
+        tr.append($('<th>', { scope: 'col', text: x }));
+    });
+    tbody.append(tr);
+
+    // Data rows - y values
+    addChartRow(katex, chartData.delta).appendTo(tbody);
+    addChartRow(katex, chartData.fx).appendTo(tbody);
+    addChartRow(katex, chartData.sum).appendTo(tbody);
+    chartData.terms.forEach((term) => {
+        addChartRow(katex, term).appendTo(tbody);
+    });
+
+    $('#table_taylor')[0].append(tbody[0]);
+}
+
+function init($, _, echarts, katex, taylor) {
     /* ****************************************************************
      * OTHER CONSTANTS
      * ****************************************************************/
@@ -61,9 +118,7 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
      * ******************************************************************************/
     $(() => {
         // Append the table body to the existing HTML table.
-        const chartData = taylorChart.getChartData();
-        const tbody = buildTable(chartData);
-        $('#table_taylor')[0].append(tbody[0]);
+        buildTable(taylorChart, katex);
 
         const titleExpression = katex.renderToString(
             `${selectedFunction.fx.tex}, a=0`,
@@ -91,61 +146,10 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
                 $('#n_value').html('(' + sliderVal + ')');
 
                 const chartData = taylorChart.getChartData();
-                const tbody = buildTable(chartData);
-                $('#table_taylor').empty();
-                $('#table_taylor')[0].append(tbody[0]);
+                buildTable(taylorChart, katex);
             },
             step: 1,
             value: selectedFunction.terms.length - 1,
         });
     });
-
-    function addChartRow(dataSet) {
-        let tr = $('<tr>');
-        tr.append(
-            $('<th>', { scope: 'row' }).append(
-                $(
-                    katex.renderToString(dataSet.texLabel, {
-                        throwOnError: false,
-                    })
-                )
-            )
-        );
-        tr.append(
-            $('<th>', { scope: 'row' }).append(
-                $(
-                    katex.renderToString(dataSet.texValue, {
-                        throwOnError: false,
-                    })
-                )
-            )
-        );
-
-        dataSet.data.forEach((x) => {
-            tr.append($('<td>', { text: x }));
-        });
-        return tr;
-    }
-
-    function buildTable(chartData) {
-        // Use a JS library to prettify the table after its made.
-        // Header row
-        let tbody = $('<tbody>');
-        let dataSet = chartData.x;
-        let tr = $('<tr>');
-        tr.append($('<th>'));
-        tr.append($('<th>'));
-        dataSet.data.forEach((x) => {
-            tr.append($('<th>', { scope: 'col', text: x }));
-        });
-        tbody.append(tr);
-
-        addChartRow(chartData.delta).appendTo(tbody);
-        addChartRow(chartData.fx).appendTo(tbody);
-        addChartRow(chartData.sum).appendTo(tbody);
-        chartData.terms.forEach((term) => {
-            addChartRow(term).appendTo(tbody);
-        });
-        return tbody;
-    }
-});
+}
