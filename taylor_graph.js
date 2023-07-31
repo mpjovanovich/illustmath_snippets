@@ -68,17 +68,15 @@ define(['mathjs'], (mathjs) => {
                     texValue: this.#functionDefinition.fx.tex,
                     data: [],
                 },
-                // TODO: fix tex
                 sum: {
-                    texLabel: 'sum',
-                    texValue: '\\sum_{n=0}^{\\infty} (f^{n}(a)/n!) (x-a)^{n}',
+                    texLabel: 'sum, \\epsilon',
+                    texValue:
+                        '\\sum_{n=0}^{\\infty}\\frac{f^{n}(a)}{n!} (x-a)^{n}',
                     data: [],
                 },
-                // TODO: fix tex
                 delta: {
-                    tex: 'delta, \\delta_{f(x)-\\epsilon}',
-                    texLabel: 'delta',
-                    texValue: '\\delta_{f(x)-\\epsilon}',
+                    texLabel: 'delta, \\delta',
+                    texValue: '\\delta (f(x)-\\epsilon)',
                     data: [],
                 },
                 terms: [],
