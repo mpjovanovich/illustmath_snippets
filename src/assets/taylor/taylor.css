@@ -1,7 +1,23 @@
 /* Everything had to be set to important, as Jupyter was trying to override it */
+#chart_taylor_title {
+    font-size: 1.17em !important;
+}
+#chart_taylor_title .katex {
+    font-size: 1.1em !important;
+}
+#taylor_container {
+    font-size: 14px !important;
+    font-family: Helvetica, Arial, sans-serif;
+}
 .katex {
-    font-size: 1em !important;
     font-weight: bold !important;
+}
+caption {
+    caption-side: bottom !important;
+    margin-top: 20px;
+    padding: 0 40px;
+    /* font-style: italic; */
+    text-align: justify;
 }
 table {
     width: 640px !important;

@@ -37,7 +37,8 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
 
     function buildTable(taylorChart) {
         const chartData = taylorChart.getChartData();
-        $('#table_taylor').empty();
+        const table = $('#table_taylor');
+        table.find('tbody').remove();
 
         // Header row - x values
         let tbody = $('<tbody>');
@@ -58,7 +59,7 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
             addChartRow(term).appendTo(tbody);
         });
 
-        $('#table_taylor')[0].append(tbody[0]);
+        table[0].append(tbody[0]);
     }
 
     function init() {

@@ -29,45 +29,46 @@ content.
     ></script>
 </head>
 <body>
-    <div style="width: fit-content">
-        <h3 id="chart_taylor_title" style="text-align: center"></h3>
-        <div id="chart_taylor"></div>
-        <div
-            style="
-                display: flex;
-                justify-content: center;
-                width: fit-content;
-                margin: 0 auto;
-            "
-        >
-            <span style="font-weight: bold; margin-right: 20px">n:</span>
+    <div id="taylor_container">
+        <div style="width: fit-content">
+            <h3 id="chart_taylor_title" style="text-align: center"></h3>
+            <div id="chart_taylor"></div>
             <div
-                id="chart_taylor_slider"
-                style="width: 300px; margin: auto"
-            ></div>
-            <span id="n_value" style="font-weight: bold; margin-left: 20px"
-                >()</span
+                style="
+                    display: flex;
+                    justify-content: center;
+                    width: fit-content;
+                    margin: 0 auto;
+                "
             >
+                <span style="font-weight: bold; margin-right: 20px">n:</span>
+                <div
+                    id="chart_taylor_slider"
+                    style="width: 300px; margin: auto"
+                ></div>
+                <span id="n_value" style="font-weight: bold; margin-left: 20px"
+                    >()</span
+                >
+            </div>
         </div>
+        <table id="table_taylor">
+            <!-- 
+                This can't go in Jupyter - they have some junk that opens a scrolling window 
+                if the html is too long. 
+            -->
+            <caption>
+                The 'n' slider can be used to adjust the number of terms in the
+                Taylor series.
+                <br /><br />
+                The 'a' slider can be used to adjust the summation function's
+                'a' value.
+                <br /><br />
+                Hovering over the graph will show the values of the functions
+                relevant to the series.
+                <br /><br />
+                Note how the delta values close to zero as the x values approach
+                point a.
+            </caption>
+        </table>
     </div>
-    <table id="table_taylor">
-        <!-- 
-        No: we have to clear the table element of all its children in the code, 
-        so we can't have a caption in the HTML. We'll just do it outside the table.
-    -->
-        <!-- <caption>
-            This is the caption.
-        </caption> -->
-    </table>
-    <!-- In the Jupyter notebook this can go in a cell. -->
-    <p style="display: block; width: 680px; margin: 0 40px">
-        The 'n' slider can be used to adjust the number of terms in the Taylor
-        series. The 'a' slider can be used to adjust the summation function's
-        'a' value. Hovering over the graph will show the values of the functions
-        relevant to the series.
-    </p>
-    <p style="display: block; width: 680px; margin: 0 40px">
-        Note how the delta values close to zero as the x values approach point
-        a.
-    </p>
 </body>
