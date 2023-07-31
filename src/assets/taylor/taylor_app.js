@@ -87,7 +87,8 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
         const selectedFunction = taylorChart.functionDefinitions.e_pow_x;
         let option = taylorChart.generateChart(
             selectedFunction,
-            selectedFunction.terms.length - 1
+            selectedFunction.terms.length - 1,
+            0
         );
         option && myChart.setOption(option, true);
 
@@ -146,12 +147,13 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
                     const sliderVal = ui.value;
                     $('#a_value').html('(' + sliderVal + ')');
 
+                    ////////////////////////////
                     // Update the chart title.
+                    ////////////////////////////
                     titleExpression = katex.renderToString(
                         `${selectedFunction.fx.tex}, a=${sliderVal}`,
                         { throwOnError: false }
                     );
-
                     $('#chart_taylor_title').html(
                         'Taylor Series Approximation: ' + titleExpression //+
                     );
@@ -161,10 +163,24 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
                                 ' (Maclauren Series)'
                         );
                     }
+                    ////////////////////////////
+                    // Update the chart values
+                    ////////////////////////////
+                    const aSliderVal = ui.value;
+                    option = taylorChart.generateChart(
+                        selectedFunction,
+                        $('#chart_taylor_slider_n').slider('value'),
+                        aSliderVal
+                    );
+                    option && myChart.setOption(option, true);
+                    $('#a_value').html('(' + sliderVal + ')');
+                    const chartData = taylorChart.getChartData();
+                    buildTable(taylorChart);
                 },
                 step: 1,
                 value: 0,
             });
+
             $('#chart_taylor_slider_n').slider({
                 create: (event, ui) => {
                     $('#n_value').html(
@@ -176,13 +192,15 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
                 max: selectedFunction.terms.length - 1,
                 min: 0,
                 slide: (event, ui) => {
-                    const sliderVal = ui.value;
+                    console.log($('#a_value')[0].innerHTML);
+                    const nSliderVal = ui.value;
                     option = taylorChart.generateChart(
                         selectedFunction,
-                        sliderVal
+                        nSliderVal,
+                        $('#chart_taylor_slider_a').slider('value')
                     );
                     option && myChart.setOption(option, true);
-                    $('#n_value').html('(' + sliderVal + ')');
+                    $('#n_value').html('(' + nSliderVal + ')');
 
                     const chartData = taylorChart.getChartData();
                     buildTable(taylorChart);

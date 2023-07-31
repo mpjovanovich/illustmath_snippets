@@ -15,23 +15,35 @@ define(['mathjs'], (mathjs) => {
         functionDefinitions = {
             e_pow_x: {
                 fx: this.#createFunctionDefinition(
-                    (x) => mathjs.pow(mathjs.e, x),
+                    (x, a) => mathjs.pow(mathjs.e, x),
                     'e^x'
                 ),
                 terms: [
-                    this.#createFunctionDefinition((x) => 1.0, '1'),
-                    this.#createFunctionDefinition((x) => x / 1.0, 'x/1!'),
                     this.#createFunctionDefinition(
-                        (x) => mathjs.pow(x, 2.0) / mathjs.factorial(2),
-                        'x^2/2!'
+                        (x, a) => mathjs.pow(mathjs.e, a),
+                        'e^a'
                     ),
                     this.#createFunctionDefinition(
-                        (x) => mathjs.pow(x, 3.0) / mathjs.factorial(3),
-                        'x^3/3!'
+                        (x, a) => (mathjs.pow(mathjs.e, a) / 1.0) * (x - a),
+                        '\\frac{e^a}{1!}(x-a)'
                     ),
                     this.#createFunctionDefinition(
-                        (x) => mathjs.pow(x, 4.0) / mathjs.factorial(4),
-                        'x^4/4!'
+                        (x, a) =>
+                            (mathjs.pow(mathjs.e, a) / mathjs.factorial(2)) *
+                            mathjs.pow(x - a, 2),
+                        '\\frac{e^a}{2!}(x-a)^2'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) =>
+                            (mathjs.pow(mathjs.e, a) / mathjs.factorial(3)) *
+                            mathjs.pow(x - a, 3),
+                        '\\frac{e^a}{3!}(x-a)^3'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) =>
+                            (mathjs.pow(mathjs.e, a) / mathjs.factorial(4)) *
+                            mathjs.pow(x - a, 4),
+                        '\\frac{e^a}{4!}(x-a)^4'
                     ),
                 ],
             },
@@ -48,6 +60,7 @@ define(['mathjs'], (mathjs) => {
         /* ****************************************************************
          * CLASS VARIABLES
          * ****************************************************************/
+        #a;
         #chartData;
         #degree;
         #functionDefinition;
@@ -127,9 +140,11 @@ define(['mathjs'], (mathjs) => {
             return returnObject;
         };
 
-        generateChart = (functionDefinition, degree) => {
+        generateChart = (functionDefinition, degree, a) => {
+            console.log('generateChart', functionDefinition, degree, a);
             let functionChanged = false;
             let degreeChanged = false;
+            let aChanged = false;
 
             if (
                 !this.#functionDefinition ||
@@ -142,11 +157,17 @@ define(['mathjs'], (mathjs) => {
                 this.#degree = degree;
                 degreeChanged = true;
             }
+            if (!this.#a || this.#a !== a) {
+                this.#a = a;
+                aChanged = true;
+            }
 
             // Nothing changed, so quit.
-            if (!functionChanged && !degreeChanged) return this.#option;
+            if (!functionChanged && !degreeChanged && !aChanged) {
+                return this.#option;
+            }
 
-            if (functionChanged) {
+            if (functionChanged || aChanged) {
                 this.#chartData = this.#generateChartData();
             }
 
@@ -211,7 +232,9 @@ define(['mathjs'], (mathjs) => {
                 curData = [];
 
                 xValues.forEach((x) =>
-                    curData.push(mathjs.round(f.fn(x), this.#VALUE_PRECISION))
+                    curData.push(
+                        mathjs.round(f.fn(x, this.#a), this.#VALUE_PRECISION)
+                    )
                 );
 
                 termsSeries.push({
@@ -270,9 +293,9 @@ define(['mathjs'], (mathjs) => {
             };
         }
 
-        #roundArray(data) {
-            return data.map((x) => Math.round(x, this.#VALUE_PRECISION));
-        }
+        // #roundArray(data) {
+        //     return data.map((x) => Math.round(x, this.#VALUE_PRECISION));
+        // }
 
         #setChartOption(chartData, degree) {
             this.#option = {
