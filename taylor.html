@@ -17,47 +17,12 @@ content.
         href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
     />
     <link
+        id="last_link"
         rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
         integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
         crossorigin="anonymous"
     />
-    <style>
-        /* Default was 1.1; a little too big. */
-        .katex {
-            font-size: 1em;
-            font-weight: bold;
-        }
-        table {
-            width: 100%;
-            margin: auto;
-            margin-top: 50px;
-            margin-bottom: 50px;
-        }
-        table th {
-            background-color: #c5c5c5;
-            padding: 10px;
-            border-top: 1px solid #fff;
-            border-bottom: 1px solid #ccc;
-        }
-        table tr:nth-child(even) td {
-            background-color: #f2f2f2;
-        }
-        /* TODO: not working... */
-        tbody:nth-child(2) {
-            background-color: #ffedcc;
-            border: 2px solid orange;
-        }
-        /* table tr:hover td {
-            background-color: #ffedcc;
-        } */
-        table td {
-            background-color: #fff;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-            font-weight: bold;
-        }
-    </style>
     <script
         data-main="/src/assets/taylor/taylor_main.js"
         src="https://requirejs.org/docs/release/2.3.6/minified/require.js"
@@ -85,10 +50,7 @@ content.
             >
         </div>
     </div>
-    <table
-        id="table_taylor"
-        style="width: 720px; margin-top: 40px; margin-left: 20px"
-    >
+    <table id="table_taylor">
         <!-- 
         No: we have to clear the table element of all its children in the code, 
         so we can't have a caption in the HTML. We'll just do it outside the table.

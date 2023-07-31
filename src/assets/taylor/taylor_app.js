@@ -95,20 +95,47 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
          * UI Controls
          * ******************************************************************************/
         $(() => {
-            // Append the table body to the existing HTML table.
+            ///////////////////////////////
+            // Load CSS - another fun hack for poor server path support.
+            ///////////////////////////////
+
+            // There's some configuration file on Jupyter that's adding css to the page.
+            // It's screwing up our nice tables - remove it.
+            $('.table').removeClass('table');
+            $('.table-condensed').removeClass('table-condensed');
+            $('.table-nonfluid').removeClass('table-nonfluid');
+            $('.rendered_html').removeClass('rendered_html');
+
+            const base_url =
+                window.location.href.split('/').slice(0, -1).join('/') + '/';
+            const cssPath = base_url + 'src/assets/taylor/taylor.css';
+            $('<link>', {
+                rel: 'stylesheet',
+                type: 'text/css',
+                href: cssPath,
+            }).insertAfter('#last_link');
+
+            ///////////////////////////////
+            // Build the table that goes under the graph.
+            ///////////////////////////////
             buildTable(taylorChart);
 
+            ///////////////////////////////
+            // Render the chart title.
+            ///////////////////////////////
             const titleExpression = katex.renderToString(
                 `${selectedFunction.fx.tex}, a=0`,
                 { throwOnError: false }
             );
-
             $('#chart_taylor_title').html(
                 'Taylor Series Approximation: ' +
                     titleExpression +
                     ' (Maclauren Series)'
             );
 
+            ///////////////////////////////
+            // Set up the sliders, and rig up events.
+            ///////////////////////////////
             $('#chart_taylor_slider').slider({
                 create: (event, ui) => {
                     $('#n_value').html(

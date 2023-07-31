@@ -1,0 +1,30 @@
+/* Everything had to be set to important, as Jupyter was trying to override it */
+.katex {
+    font-size: 1em !important;
+    font-weight: bold !important;
+}
+table {
+    width: 640px !important;
+    margin: 0 !important;
+    margin-top: 50px !important;
+    margin-bottom: 50px !important;
+    font-size: 1em !important;
+}
+table th {
+    background-color: #c5c5c5 !important;
+    padding: 10px !important;
+    border-top: 1px solid #fff !important;
+    border-bottom: 1px solid #ccc !important;
+    font-weight: bold !important;
+}
+table tr:nth-child(even) td {
+    background-color: #f2f2f2 !important;
+}
+table tr:nth-child(2) td {
+    background-color: #ffedcc !important;
+}
+table td {
+    background-color: #fff !important;
+    padding: 10px !important;
+    border-bottom: 1px solid #ccc !important;
+}
