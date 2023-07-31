@@ -73,7 +73,9 @@ define(['mathjs'], (mathjs) => {
             };
             for (let i = 2; i < this.#option.series.length; i++) {
                 returnObject.terms.push({
-                    tex: this.#functionDefinition.terms[i - 2].tex,
+                    tex:
+                        `f(${i - 2}), ` +
+                        this.#functionDefinition.terms[i - 2].tex,
                     data: [],
                 });
             }
