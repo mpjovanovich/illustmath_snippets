@@ -61,7 +61,6 @@ define(['mathjs'], (mathjs) => {
         getChartData = () => {
             // Build an index array for subset that will form the return elements.
             let returnObject = {
-                // TODO: export only a subset of the data.
                 x: { tex: 'x', data: [] },
                 fx: {
                     texLabel: 'f(x)',
@@ -231,7 +230,6 @@ define(['mathjs'], (mathjs) => {
         }
 
         #getChartSeries(degree) {
-            // TODO: export a consumable snapshot of the chart data for the client.
             const slicedTerms = this.#chartData.termsSeries.slice(
                 0,
                 degree + 1

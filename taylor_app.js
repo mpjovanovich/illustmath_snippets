@@ -1,7 +1,7 @@
-// TODO: diff table below graph. This can show the function derivative names and values.
+// TODO: Move prototype to Jupyter to see how much is screwed up.
+// At that point we can just override the files (copy/paste) -
+// but I'm expecting pain when we first try to plug it in.
 // TODO: Add 'a' parameter for Taylor.
-// TODO: legend on right of graph with function name and degree?
-// TODO: this app is utilizing memory poorly.
 
 /* ****************************************************************
  * INCLUDED LIBRARIES
@@ -140,9 +140,9 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
         });
         tbody.append(tr);
 
+        addChartRow(chartData.delta).appendTo(tbody);
         addChartRow(chartData.fx).appendTo(tbody);
         addChartRow(chartData.sum).appendTo(tbody);
-        addChartRow(chartData.delta).appendTo(tbody);
         chartData.terms.forEach((term) => {
             addChartRow(term).appendTo(tbody);
         });

@@ -43,9 +43,14 @@ content.
         table tr:nth-child(even) td {
             background-color: #f2f2f2;
         }
-        table tr:hover td {
+        /* TODO: not working... */
+        tbody:nth-child(2) {
             background-color: #ffedcc;
+            border: 2px solid orange;
         }
+        /* table tr:hover td {
+            background-color: #ffedcc;
+        } */
         table td {
             background-color: #fff;
             padding: 10px;
@@ -80,9 +85,27 @@ content.
             >
         </div>
     </div>
-    <table id="table_taylor" style="margin-top: 40px; margin-left: 20px">
-        <caption>
+    <table
+        id="table_taylor"
+        style="width: 720px; margin-top: 40px; margin-left: 20px"
+    >
+        <!-- 
+        No: we have to clear the table element of all its children in the code, 
+        so we can't have a caption in the HTML. We'll just do it outside the table.
+    -->
+        <!-- <caption>
             This is the caption.
-        </caption>
+        </caption> -->
     </table>
+    <!-- In the Jupyter notebook this can go in a cell. -->
+    <span style="display: block; text-align: center; width: 720px">
+        The 'n' slider can be used to adjust the number of terms in the Taylor
+        series. The 'a' slider can be used to adjust the summation function's
+        'a' value. Hovering over the graph will show the values of the functions
+        relevant to the series.
+    </span>
+    <span style="display: block; text-align: center; width: 720px">
+        Note how the delta values close to zero as the x values approach point
+        a.
+    </span>
 </body>
