@@ -1,3 +1,5 @@
+// TODO: draw vertical dashed line for a value.
+// TODO: make legend titles match leftmost colmn on table.
 define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
     $,
     _,
@@ -125,12 +127,13 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
             // Render the chart title.
             ///////////////////////////////
             let titleExpression = katex.renderToString(
-                `${selectedFunction.fx.tex}, a=0`,
+                `${selectedFunction.fx.tex}`,
                 { throwOnError: false }
             );
             $('#chart_taylor_title').html(
                 'Taylor Series Approximation: ' +
                     titleExpression +
+                    ', degree=0, a=0' +
                     ' (Maclauren Series)'
             );
 
@@ -141,39 +144,39 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
                 create: (event, ui) => {
                     $('#a_value').html('(' + (0).toString() + ')');
                 },
-                max: 4,
+                max: 5,
                 min: 0,
                 slide: (event, ui) => {
-                    const sliderVal = ui.value;
-                    $('#a_value').html('(' + sliderVal + ')');
+                    const aSliderVal = ui.value;
+                    $('#a_value').html('(' + aSliderVal + ')');
 
                     ////////////////////////////
                     // Update the chart title.
                     ////////////////////////////
-                    titleExpression = katex.renderToString(
-                        `${selectedFunction.fx.tex}, a=${sliderVal}`,
-                        { throwOnError: false }
-                    );
                     $('#chart_taylor_title').html(
-                        'Taylor Series Approximation: ' + titleExpression //+
+                        'Taylor Series Approximation: ' +
+                            titleExpression +
+                            `, degree=${$('#chart_taylor_slider_n').slider(
+                                'value'
+                            )}, a=${aSliderVal}`
                     );
-                    if (sliderVal == 0) {
+                    if (aSliderVal == 0) {
                         $('#chart_taylor_title').html(
                             $('#chart_taylor_title').html() +
                                 ' (Maclauren Series)'
                         );
                     }
+
                     ////////////////////////////
                     // Update the chart values
                     ////////////////////////////
-                    const aSliderVal = ui.value;
                     option = taylorChart.generateChart(
                         selectedFunction,
                         $('#chart_taylor_slider_n').slider('value'),
                         aSliderVal
                     );
                     option && myChart.setOption(option, true);
-                    $('#a_value').html('(' + sliderVal + ')');
+
                     const chartData = taylorChart.getChartData();
                     buildTable(taylorChart);
                 },
@@ -192,15 +195,34 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
                 max: selectedFunction.terms.length - 1,
                 min: 0,
                 slide: (event, ui) => {
-                    console.log($('#a_value')[0].innerHTML);
                     const nSliderVal = ui.value;
+                    $('#n_value').html('(' + nSliderVal + ')');
+
+                    ////////////////////////////
+                    // Update the chart title.
+                    ////////////////////////////
+                    $('#chart_taylor_title').html(
+                        'Taylor Series Approximation: ' +
+                            titleExpression +
+                            `, degree=${nSliderVal}, ` +
+                            `a=${$('#chart_taylor_slider_a').slider('value')}`
+                    );
+                    if ($('#chart_taylor_slider_a').slider('value') == 0) {
+                        $('#chart_taylor_title').html(
+                            $('#chart_taylor_title').html() +
+                                ' (Maclauren Series)'
+                        );
+                    }
+
+                    ////////////////////////////
+                    // Update the chart values
+                    ////////////////////////////
                     option = taylorChart.generateChart(
                         selectedFunction,
                         nSliderVal,
                         $('#chart_taylor_slider_a').slider('value')
                     );
                     option && myChart.setOption(option, true);
-                    $('#n_value').html('(' + nSliderVal + ')');
 
                     const chartData = taylorChart.getChartData();
                     buildTable(taylorChart);
