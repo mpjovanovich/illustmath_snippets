@@ -79,6 +79,7 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
 
         addChartRow(chartData.fx).appendTo(tbody);
         addChartRow(chartData.sum).appendTo(tbody);
+        addChartRow(chartData.delta).appendTo(tbody);
         chartData.terms.forEach((term) => {
             addChartRow(term).appendTo(tbody);
         });
@@ -119,8 +120,9 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
     function addChartRow(dataSet) {
         let tr = $('<tr>');
         tr.append(
-            $('<th>', { scope: 'row', text: dataSet.tex })
-            // $('<th>', { scope: 'row', text: katex.renderToString(dataSet.tex) })
+            $('<th>', { scope: 'row' }).append(
+                $(katex.renderToString(dataSet.tex, { throwOnError: false }))
+            )
         );
         dataSet.data.forEach((x) => {
             tr.append($('<td>', { text: x }));

@@ -89,8 +89,12 @@ define(['mathjs'], (mathjs) => {
                 returnObject.fx.data.push(this.#option.series[0].data[i]);
                 returnObject.sum.data.push(this.#option.series[1].data[i]);
                 returnObject.delta.data.push(
-                    this.#option.series[0].data[i] -
-                        this.#option.series[1].data[i]
+                    // We're calculating here, so we have to round the result.
+                    mathjs.round(
+                        this.#option.series[0].data[i] -
+                            this.#option.series[1].data[i],
+                        this.#VALUE_PRECISION
+                    )
                 );
                 for (let j = 2; j < this.#option.series.length; j++) {
                     let termIndex = j - 2;
@@ -99,6 +103,13 @@ define(['mathjs'], (mathjs) => {
                     );
                 }
             }
+
+            returnObject.x.data = returnObject.x.data.map((x) =>
+                Math.round(x, 2)
+            );
+            returnObject.fx.data = returnObject.fx.data.map((x) =>
+                Math.round(x, 2)
+            );
 
             return returnObject;
         };
@@ -245,6 +256,10 @@ define(['mathjs'], (mathjs) => {
                 showSymbol: false,
                 type: 'line',
             };
+        }
+
+        #roundArray(data) {
+            return data.map((x) => Math.round(x, this.#VALUE_PRECISION));
         }
 
         #setChartOption(chartData, degree) {
