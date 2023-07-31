@@ -64,18 +64,32 @@ define(['mathjs'], (mathjs) => {
                 // TODO: export only a subset of the data.
                 x: { tex: 'x', data: [] },
                 fx: {
-                    tex: `f(x), ${this.#functionDefinition.fx.tex}`,
+                    texLabel: 'f(x)',
+                    texValue: this.#functionDefinition.fx.tex,
                     data: [],
                 },
-                sum: { tex: 'Sum of Terms, \\epsilon{}', data: [] },
-                delta: { tex: 'Delta, \\delta{f(x)-}', data: [] },
+                // TODO: fix tex
+                sum: {
+                    texLabel: 'sum',
+                    texValue: '\\sum_{n=0}^{\\infty} (f^{n}(a)/n!) (x-a)^{n}',
+                    data: [],
+                },
+                // TODO: fix tex
+                delta: {
+                    tex: 'delta, \\delta_{f(x)-\\epsilon}',
+                    texLabel: 'delta',
+                    texValue: '\\delta_{f(x)-\\epsilon}',
+                    data: [],
+                },
                 terms: [],
             };
             for (let i = 2; i < this.#option.series.length; i++) {
                 returnObject.terms.push({
                     tex:
-                        `f(${i - 2}), ` +
+                        `f^{(${i - 2})}(x), ` +
                         this.#functionDefinition.terms[i - 2].tex,
+                    texLabel: `f^{(${i - 2})}(x)`,
+                    texValue: this.#functionDefinition.terms[i - 2].tex,
                     data: [],
                 });
             }

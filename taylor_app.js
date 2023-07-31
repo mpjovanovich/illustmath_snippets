@@ -101,9 +101,23 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
         let tr = $('<tr>');
         tr.append(
             $('<th>', { scope: 'row' }).append(
-                $(katex.renderToString(dataSet.tex, { throwOnError: false }))
+                $(
+                    katex.renderToString(dataSet.texLabel, {
+                        throwOnError: false,
+                    })
+                )
             )
         );
+        tr.append(
+            $('<th>', { scope: 'row' }).append(
+                $(
+                    katex.renderToString(dataSet.texValue, {
+                        throwOnError: false,
+                    })
+                )
+            )
+        );
+
         dataSet.data.forEach((x) => {
             tr.append($('<td>', { text: x }));
         });
@@ -116,6 +130,7 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
         let tbody = $('<tbody>');
         let dataSet = chartData.x;
         let tr = $('<tr>');
+        tr.append($('<th>'));
         tr.append($('<th>'));
         dataSet.data.forEach((x) => {
             tr.append($('<th>', { scope: 'col', text: x }));
