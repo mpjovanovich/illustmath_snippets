@@ -60,10 +60,8 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
      * UI Controls
      * ******************************************************************************/
     $(() => {
-        // DEBUG
-        const chartData = taylorChart.getChartData();
-
         // Append the table body to the existing HTML table.
+        const chartData = taylorChart.getChartData();
         const tbody = buildTable(chartData);
         $('#table_taylor')[0].append(tbody[0]);
 
@@ -91,6 +89,11 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
                 option = taylorChart.generateChart(selectedFunction, sliderVal);
                 option && myChart.setOption(option, true);
                 $('#n_value').html('(' + sliderVal + ')');
+
+                const chartData = taylorChart.getChartData();
+                const tbody = buildTable(chartData);
+                $('#table_taylor').empty();
+                $('#table_taylor')[0].append(tbody[0]);
             },
             step: 1,
             value: selectedFunction.terms.length - 1,
