@@ -62,29 +62,9 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
     $(() => {
         // DEBUG
         const chartData = taylorChart.getChartData();
-        console.log(chartData);
-
-        // // TODO: Extract to function. Can go in a new module for charting.
-        // // Use a JS library to prettify the table after its made.
-        let tbody = $('<tbody>');
-
-        // // Header row
-        let dataSet = chartData.x;
-        let tr = $('<tr>');
-        tr.append($('<th>'));
-        dataSet.data.forEach((x) => {
-            tr.append($('<th>', { scope: 'col', text: x }));
-        });
-        tbody.append(tr);
-
-        addChartRow(chartData.fx).appendTo(tbody);
-        addChartRow(chartData.sum).appendTo(tbody);
-        addChartRow(chartData.delta).appendTo(tbody);
-        chartData.terms.forEach((term) => {
-            addChartRow(term).appendTo(tbody);
-        });
 
         // Append the table body to the existing HTML table.
+        const tbody = buildTable(chartData);
         $('#table_taylor')[0].append(tbody[0]);
 
         const titleExpression = katex.renderToString(
@@ -128,5 +108,26 @@ require(['jquery', 'jqueryui', 'echarts', 'katex', 'taylor'], (
             tr.append($('<td>', { text: x }));
         });
         return tr;
+    }
+
+    function buildTable(chartData) {
+        // Use a JS library to prettify the table after its made.
+        // Header row
+        let tbody = $('<tbody>');
+        let dataSet = chartData.x;
+        let tr = $('<tr>');
+        tr.append($('<th>'));
+        dataSet.data.forEach((x) => {
+            tr.append($('<th>', { scope: 'col', text: x }));
+        });
+        tbody.append(tr);
+
+        addChartRow(chartData.fx).appendTo(tbody);
+        addChartRow(chartData.sum).appendTo(tbody);
+        addChartRow(chartData.delta).appendTo(tbody);
+        chartData.terms.forEach((term) => {
+            addChartRow(term).appendTo(tbody);
+        });
+        return tbody;
     }
 });
