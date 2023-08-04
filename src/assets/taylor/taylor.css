@@ -1,6 +1,7 @@
 /* Everything had to be set to important, as Jupyter was trying to override it */
 #chart_taylor_title {
     font-size: 1.1em !important;
+    font-weight: bold !important;
 }
 #chart_taylor_title .katex {
     font-size: 1.1em !important;
@@ -15,11 +16,12 @@
 .slider {
     margin-bottom: 20px !important;
 }
-caption {
-    caption-side: bottom !important;
-    margin-top: 20px;
-    padding: 0 40px;
-    text-align: justify;
+.table-caption {
+    line-height: 0.8em !important;
+    margin-top: 20px !important;
+    padding: 0 40px !important;
+    text-align: justify !important;
+    font-style: italic !important;
 }
 table {
     width: 640px !important;
