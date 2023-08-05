@@ -21,29 +21,29 @@ define(['mathjs'], (mathjs) => {
                 terms: [
                     this.#createFunctionDefinition(
                         (x, a) => mathjs.pow(mathjs.e, a),
-                        'e^a'
+                        'e^{#A}'
                     ),
                     this.#createFunctionDefinition(
                         (x, a) => (mathjs.pow(mathjs.e, a) / 1.0) * (x - a),
-                        '\\frac{e^a}{1!}(x-a)'
+                        '\\frac{e^{#A}}{1!}(x-#A)'
                     ),
                     this.#createFunctionDefinition(
                         (x, a) =>
                             (mathjs.pow(mathjs.e, a) / mathjs.factorial(2)) *
                             mathjs.pow(x - a, 2),
-                        '\\frac{e^a}{2!}(x-a)^2'
+                        '\\frac{e^{#A}}{2!}(x-{#A})^2'
                     ),
                     this.#createFunctionDefinition(
                         (x, a) =>
                             (mathjs.pow(mathjs.e, a) / mathjs.factorial(3)) *
                             mathjs.pow(x - a, 3),
-                        '\\frac{e^a}{3!}(x-a)^3'
+                        '\\frac{e^#A}{3!}(x-#A)^3'
                     ),
                     this.#createFunctionDefinition(
                         (x, a) =>
                             (mathjs.pow(mathjs.e, a) / mathjs.factorial(4)) *
                             mathjs.pow(x - a, 4),
-                        '\\frac{e^a}{4!}(x-a)^4'
+                        '\\frac{e^#A}{4!}(x-#A)^4'
                     ),
                 ],
             },
@@ -74,6 +74,8 @@ define(['mathjs'], (mathjs) => {
         getChartData = () => {
             // Build an index array for subset that will form the return elements.
             let returnObject = {
+                a: this.#a,
+                n: this.#degree,
                 x: { tex: 'x', data: [] },
                 fx: {
                     texLabel: 'f(x)',
@@ -83,7 +85,7 @@ define(['mathjs'], (mathjs) => {
                 sum: {
                     texLabel: 'g(x)',
                     texValue:
-                        '\\sum_{n=0}^{\\infty}\\frac{f^{n}(a)}{n!} (x-a)^{n}',
+                        '\\sum_{n=0}^{\\infty}\\frac{f^{n}(#A)}{n!} (x-#A)^{n}',
                     data: [],
                 },
                 delta: {
