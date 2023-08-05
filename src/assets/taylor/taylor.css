@@ -46,3 +46,6 @@ table td {
     padding: 10px !important;
     border-bottom: 1px solid #ccc !important;
 }
+p {
+    margin-bottom: 10px;
+}
