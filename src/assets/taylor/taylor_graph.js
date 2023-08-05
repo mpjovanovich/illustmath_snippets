@@ -81,24 +81,21 @@ define(['mathjs'], (mathjs) => {
                     data: [],
                 },
                 sum: {
-                    texLabel: 'sum, \\epsilon',
+                    texLabel: 'g(x)',
                     texValue:
                         '\\sum_{n=0}^{\\infty}\\frac{f^{n}(a)}{n!} (x-a)^{n}',
                     data: [],
                 },
                 delta: {
-                    texLabel: 'delta, \\delta',
-                    texValue: '\\delta (f(x)-\\epsilon)',
+                    texLabel: '\\delta(x)',
+                    texValue: 'f(x)-g(x)',
                     data: [],
                 },
                 terms: [],
             };
             for (let i = 2; i < this.#option.series.length; i++) {
                 returnObject.terms.push({
-                    tex:
-                        `f^{(${i - 2})}(x), ` +
-                        this.#functionDefinition.terms[i - 2].tex,
-                    texLabel: `f^{(${i - 2})}(x)`,
+                    texLabel: `term ${i - 2}`,
                     texValue: this.#functionDefinition.terms[i - 2].tex,
                     data: [],
                 });
@@ -130,18 +127,10 @@ define(['mathjs'], (mathjs) => {
                 }
             }
 
-            returnObject.x.data = returnObject.x.data.map((x) =>
-                Math.round(x, 2)
-            );
-            returnObject.fx.data = returnObject.fx.data.map((x) =>
-                Math.round(x, 2)
-            );
-
             return returnObject;
         };
 
         generateChart = (functionDefinition, degree, a) => {
-            console.log('generateChart', functionDefinition, degree, a);
             let functionChanged = false;
             let degreeChanged = false;
             let aChanged = false;
@@ -201,14 +190,14 @@ define(['mathjs'], (mathjs) => {
 
             // Plot the function
             curData = [];
-            xValues.forEach((x) =>
+            xValues.forEach((x) => {
                 curData.push(
                     mathjs.round(
                         this.#functionDefinition.fx.fn(x),
                         this.#VALUE_PRECISION
                     )
-                )
-            );
+                );
+            });
 
             const fnSeries = {
                 name: 'f(x)',
@@ -292,10 +281,6 @@ define(['mathjs'], (mathjs) => {
                 type: 'line',
             };
         }
-
-        // #roundArray(data) {
-        //     return data.map((x) => Math.round(x, this.#VALUE_PRECISION));
-        // }
 
         #setChartOption(chartData, degree) {
             this.#option = {

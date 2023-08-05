@@ -46,7 +46,8 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
         let tbody = $('<tbody>');
         let dataSet = chartData.x;
         let tr = $('<tr>');
-        tr.append($('<th>'));
+        // tr.append($('<th>'));
+        tr.append($('<th>', { scope: 'row', text: 'x' }));
         tr.append($('<th>'));
         dataSet.data.forEach((x) => {
             tr.append($('<th>', { scope: 'col', text: x }));
