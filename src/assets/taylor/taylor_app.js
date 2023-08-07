@@ -1,6 +1,3 @@
-// TODO: make legend titles match leftmost colmn on table.
-// Put in actual descriptions - start filling out the notebook.
-// TODO: draw vertical dashed line for 'a' value?
 define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
     $,
     _,
@@ -21,7 +18,7 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
             )
         );
         tr.append(
-            $('<th>', { scope: 'row' }).append(
+            $('<th class="taylor_equation">', { scope: 'row' }).append(
                 $(
                     katex.renderToString(
                         dataSet.texValue.replace(new RegExp('#A', 'g'), a),
