@@ -5,11 +5,6 @@ content.
 -->
 <!DOCTYPE html>
 <head>
-    <!-- 
-        TODO: when we drop this into Jupyter, we'll need to copy in that script that gets the base file path.
-        Then we can just call the one single init script and it'll do everything - no need for a JS cell below
-        the HTML cell.
-    -->
     <title>Taylor Series</title>
     <!-- data-main should point to the entry point for the 'main application' script. -->
     <link
@@ -30,6 +25,31 @@ content.
 </head>
 <body>
     <div id="taylor_container">
+        <fieldset id="functions">
+            <legend>Select a function:</legend>
+            <label class="tex" for="e_pow_x">e^x</label>
+            <input
+                class="functionSelector"
+                type="radio"
+                name="function"
+                id="e_pow_x"
+            />
+            <label class="tex" for="one_over_one_minus_x">1/(1-x)</label>
+            <input
+                class="functionSelector"
+                type="radio"
+                name="function"
+                id="one_over_one_minus_x"
+            />
+            <label class="tex" for="sin_x">sin(x)</label>
+            <input
+                class="functionSelector"
+                type="radio"
+                name="function"
+                id="sin_x"
+            />
+        </fieldset>
+        <p id="test2"></p>
         <div style="width: fit-content">
             <h3 id="chart_taylor_title" style="text-align: center"></h3>
             <div id="chart_taylor"></div>

@@ -14,6 +14,12 @@ define(['mathjs'], (mathjs) => {
         // This one is public so that it's exposed in the API.
         functionDefinitions = {
             e_pow_x: {
+                gridDims: {
+                    x: { min: 0, max: 5 },
+                    y: { min: 0, max: 10 },
+                },
+                tableAVals: { min: 0, max: 5 },
+                tableXVals: [0, 1, 2, 3, 4, 5],
                 fx: this.#createFunctionDefinition(
                     (x, a) => mathjs.pow(mathjs.e, x),
                     'e^x'
@@ -47,11 +53,89 @@ define(['mathjs'], (mathjs) => {
                     ),
                 ],
             },
-        };
-
-        #GRID_DIMS = {
-            x: { min: 0, max: 5 },
-            y: { min: 0, max: 10 },
+            one_over_one_minus_x: {
+                gridDims: {
+                    x: { min: -2, max: 7 },
+                    y: { min: -1.5, max: 1.5 },
+                },
+                tableAVals: { min: 0, max: 5 },
+                tableXVals: [0, 1, 2, 3, 4, 5],
+                fx: this.#createFunctionDefinition(
+                    (x, a) => 1.0 / (1.0 - x),
+                    '1/(1-x)'
+                ),
+                terms: [
+                    this.#createFunctionDefinition(
+                        (x, a) => 1.0 / (1.0 - a),
+                        '\\frac{1}{(1-#A)}'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) => (1.0 / mathjs.pow(1 - a, 2)) * (x - a),
+                        '\\frac{1*1!}{(1-x)^2}(x-#A)'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) =>
+                            ((2.0 * mathjs.factorial(2)) /
+                                mathjs.pow(1 - a, 3)) *
+                            mathjs.pow(x - a, 2),
+                        '\\frac{2*2!}{(1-x)^3}(x-#A)^2'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) =>
+                            ((6.0 * mathjs.factorial(3)) /
+                                mathjs.pow(1 - a, 4)) *
+                            mathjs.pow(x - a, 3),
+                        '\\frac{6*3!}{(1-x)^4}(x-#A)^3'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) =>
+                            ((24.0 * mathjs.factorial(4)) /
+                                mathjs.pow(1 - a, 5)) *
+                            mathjs.pow(x - a, 4),
+                        '\\frac{24*4!}{(1-x)^5}(x-#A)^4'
+                    ),
+                ],
+            },
+            sin_x: {
+                gridDims: {
+                    x: { min: -5, max: 5 },
+                    y: { min: -1.5, max: 1.5 },
+                },
+                tableAVals: { min: 0, max: 5 },
+                tableXVals: [-2, -1, 0, 1, 2],
+                fx: this.#createFunctionDefinition(
+                    (x, a) => mathjs.sin(x),
+                    'sin(x)'
+                ),
+                terms: [
+                    this.#createFunctionDefinition(
+                        (x, a) => mathjs.sin(a),
+                        'sin(#A)'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) => (mathjs.cos(a) / 1.0) * (x - a),
+                        '\\frac{cos(#A)}{1!}(x-#A)'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) =>
+                            ((-1 * mathjs.sin(a)) / mathjs.factorial(2)) *
+                            mathjs.pow(x - a, 2),
+                        '\\frac{-sin(#A)}{2!}(x-{#A})^2'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) =>
+                            ((-1 * mathjs.cos(a)) / mathjs.factorial(3)) *
+                            mathjs.pow(x - a, 3),
+                        '\\frac{-cos(#A)}{3!}(x-{#A})^3'
+                    ),
+                    this.#createFunctionDefinition(
+                        (x, a) =>
+                            (mathjs.sin(a) / mathjs.factorial(4)) *
+                            mathjs.pow(x - a, 4),
+                        '\\frac{sin(#A)}{4!}(x-{#A})^4'
+                    ),
+                ],
+            },
         };
 
         #TICKS_PER_UNIT = 0.1;
@@ -103,31 +187,26 @@ define(['mathjs'], (mathjs) => {
                 });
             }
 
-            // This was chosen arbitrarily.
-            let increment = Math.floor(1 / this.#TICKS_PER_UNIT);
-            for (
-                let i = 0;
-                i < this.#chartData.xValues.length;
-                i += increment
-            ) {
-                returnObject.x.data.push(this.#chartData.xValues[i]);
-                returnObject.fx.data.push(this.#option.series[0].data[i]);
-                returnObject.sum.data.push(this.#option.series[1].data[i]);
+            this.#functionDefinition.tableXVals.forEach((x) => {
+                const xIndex = this.#chartData.xValues.indexOf(x);
+                returnObject.x.data.push(x);
+                returnObject.fx.data.push(this.#option.series[0].data[xIndex]);
+                returnObject.sum.data.push(this.#option.series[1].data[xIndex]);
                 returnObject.delta.data.push(
                     // We're calculating here, so we have to round the result.
                     mathjs.round(
-                        this.#option.series[0].data[i] -
-                            this.#option.series[1].data[i],
+                        this.#option.series[0].data[xIndex] -
+                            this.#option.series[1].data[xIndex],
                         this.#VALUE_PRECISION
                     )
                 );
                 for (let j = 2; j < this.#option.series.length; j++) {
-                    let termIndex = j - 2;
-                    returnObject.terms[termIndex].data.push(
-                        this.#option.series[j].data[i]
+                    let termIndexIndex = j - 2;
+                    returnObject.terms[termIndexIndex].data.push(
+                        this.#option.series[j].data[xIndex]
                     );
                 }
-            }
+            });
 
             return returnObject;
         };
@@ -139,7 +218,7 @@ define(['mathjs'], (mathjs) => {
 
             if (
                 !this.#functionDefinition ||
-                functionDefinition.tex !== this.#functionDefinition.tex
+                functionDefinition.fx.tex !== this.#functionDefinition.fx.tex
             ) {
                 this.#functionDefinition = functionDefinition;
                 functionChanged = true;
@@ -175,15 +254,14 @@ define(['mathjs'], (mathjs) => {
         }
 
         #generateChartData() {
-            // let seriesIndex = 0;
             let xValues = [];
             let termsSeries = [];
             let curData = [];
 
             // Initialize the x axis values
             for (
-                let x = this.#GRID_DIMS.x.min;
-                x <= this.#GRID_DIMS.x.max;
+                let x = this.#functionDefinition.gridDims.x.min;
+                x <= this.#functionDefinition.gridDims.x.max;
                 x += this.#TICKS_PER_UNIT
             ) {
                 x = mathjs.round(x, 1); // The binary addition from the add makes the results off by a little bit - round them back.
@@ -193,12 +271,14 @@ define(['mathjs'], (mathjs) => {
             // Plot the function
             curData = [];
             xValues.forEach((x) => {
-                curData.push(
-                    mathjs.round(
-                        this.#functionDefinition.fx.fn(x),
-                        this.#VALUE_PRECISION
-                    )
-                );
+                let y = this.#functionDefinition.fx.fn(x);
+                // echarts will try to plot Inifinity as a verticle asymptote.
+                // This should really be NaN.
+                if (y == Infinity || y == -Infinity) {
+                    curData.push(NaN);
+                } else {
+                    curData.push(mathjs.round(y, this.#VALUE_PRECISION));
+                }
             });
 
             const fnSeries = {
@@ -222,11 +302,16 @@ define(['mathjs'], (mathjs) => {
             this.#functionDefinition.terms.forEach((f, fIndex) => {
                 curData = [];
 
-                xValues.forEach((x) =>
-                    curData.push(
-                        mathjs.round(f.fn(x, this.#a), this.#VALUE_PRECISION)
-                    )
-                );
+                xValues.forEach((x) => {
+                    let y = f.fn(x, this.#a);
+                    // echarts will try to plot Inifinity as a verticle asymptote.
+                    // This should really be NaN.
+                    if (y == Infinity || y == -Infinity) {
+                        curData.push(NaN);
+                    } else {
+                        curData.push(mathjs.round(y, this.#VALUE_PRECISION));
+                    }
+                });
 
                 termsSeries.push({
                     name: 'term' + fIndex,
@@ -299,8 +384,8 @@ define(['mathjs'], (mathjs) => {
                 },
                 yAxis: {
                     ...this.#axisOptions,
-                    max: this.#GRID_DIMS.y.max,
-                    min: this.#GRID_DIMS.y.min,
+                    max: this.#functionDefinition.gridDims.y.max,
+                    min: this.#functionDefinition.gridDims.y.min,
                     name: 'y',
                     type: 'value',
                 },

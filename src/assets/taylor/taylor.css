@@ -6,6 +6,9 @@
 #chart_taylor_title .katex {
     font-size: 1.1em !important;
 }
+#table_taylor tr:nth-child(2) td {
+    background-color: #ffedcc !important;
+}
 #taylor_container {
     font-size: 14px !important;
     font-family: Helvetica, Arial, sans-serif;
@@ -50,7 +53,4 @@ table th {
 }
 table tr:nth-child(even) td {
     background-color: #f2f2f2 !important;
-}
-table tr:nth-child(2) td {
-    background-color: #ffedcc !important;
 }

@@ -64,6 +64,42 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
         table[0].append(tbody[0]);
     }
 
+    function updateGraph(taylorChart, myChart, selectedFunction, degree, a) {
+        if (degree == null)
+            degree = $('#chart_taylor_slider_n').slider('value');
+        if (a == null) a = $('#chart_taylor_slider_a').slider('value');
+
+        ///////////////////////////////
+        // Update slider vals and text
+        ///////////////////////////////
+        $('#chart_taylor_slider_a').slider('value', a);
+        $('#a_value').html('(' + a + ')');
+
+        $('#chart_taylor_slider_n').slider('value', degree);
+        $('#n_value').html('(' + degree + ')');
+
+        ///////////////////////////////
+        // Render the chart title.
+        ///////////////////////////////
+        let titleExpression = katex.renderToString(
+            `${selectedFunction.fx.tex}`,
+            { throwOnError: false }
+        );
+        $('#chart_taylor_title').html(
+            `Taylor Series Approximation: ${titleExpression}, degree=${degree}, a=${a}`
+        );
+        if (a == 0) {
+            $('#chart_taylor_title').html(
+                $('#chart_taylor_title').html() + ' (Maclauren Series)'
+            );
+        }
+
+        option = taylorChart.generateChart(selectedFunction, degree, a);
+        option && myChart.setOption(option, true);
+
+        buildTable(taylorChart);
+    }
+
     function init() {
         /* ****************************************************************
          * OTHER CONSTANTS
@@ -71,36 +107,13 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
         const MAX_SIZE = 600;
 
         /* ******************************************************************************
-         * BUILD THE CHART
-         * ******************************************************************************/
-        const myChart = echarts.init(
-            document.getElementById('chart_taylor'),
-            null,
-            {
-                // For e_pow_x it's easier to see the delta in the summation if we don't draw the axes to scale.
-                // We'll have to include this as a property on the object for the other functions.
-                width: MAX_SIZE,
-                height: MAX_SIZE,
-            }
-        );
-
-        // TODO: Hardcoded to e_pow_x until we add a dropdown for function selection.
-        // If the chart option exists (is should - this is a sanity check), display the chart.
-        const taylorChart = new taylorGraph.TaylorChart();
-        const selectedFunction = taylorChart.functionDefinitions.e_pow_x;
-        let option = taylorChart.generateChart(
-            selectedFunction,
-            selectedFunction.terms.length - 1,
-            0
-        );
-        option && myChart.setOption(option, true);
-
-        /* ******************************************************************************
          * UI Controls
          * ******************************************************************************/
         $(() => {
             ///////////////////////////////
             // Load CSS - another fun hack for poor server path support.
+            // This has to do entirely with the fact that we're running this on Jupyter -
+            // otherwise not needed.
             ///////////////////////////////
 
             // There's some configuration file on Jupyter that's adding css to the page.
@@ -119,24 +132,48 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
                 href: cssPath,
             }).insertAfter('#last_link');
 
-            ///////////////////////////////
-            // Build the table that goes under the graph.
-            ///////////////////////////////
-            buildTable(taylorChart);
+            /* ******************************************************************************
+             * BUILD THE CHART
+             * ******************************************************************************/
+            const myChart = echarts.init(
+                document.getElementById('chart_taylor'),
+                null,
+                {
+                    width: MAX_SIZE,
+                    height: MAX_SIZE,
+                }
+            );
+
+            // If the chart option exists (is should - this is a sanity check), display the chart.
+            const taylorChart = new taylorGraph.TaylorChart();
+            let selectedFunction = taylorChart.functionDefinitions.e_pow_x;
+            let option;
 
             ///////////////////////////////
-            // Render the chart title.
+            // Set up the function selector.
             ///////////////////////////////
-            let titleExpression = katex.renderToString(
-                `${selectedFunction.fx.tex}`,
-                { throwOnError: false }
-            );
-            $('#chart_taylor_title').html(
-                'Taylor Series Approximation: ' +
-                    titleExpression +
-                    ', degree=0, a=0' +
-                    ' (Maclauren Series)'
-            );
+            // Render tex
+            $('.tex').each((index, element) => {
+                katex.render($(element).text(), $(element)[0], {
+                    throwOnError: false,
+                });
+            });
+
+            // Radio controls
+            $('#functions').controlgroup();
+            $('.functionSelector')
+                .checkboxradio()
+                .on('change', (event) => {
+                    selectedFunction =
+                        taylorChart.functionDefinitions[event.target.id];
+                    updateGraph(
+                        taylorChart,
+                        myChart,
+                        selectedFunction,
+                        selectedFunction.terms.length - 1,
+                        0
+                    );
+                });
 
             ///////////////////////////////
             // Set up the sliders, and rig up events.
@@ -145,41 +182,17 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
                 create: (event, ui) => {
                     $('#a_value').html('(' + (0).toString() + ')');
                 },
-                max: 5,
-                min: 0,
+                max: selectedFunction.tableAVals.max,
+                min: selectedFunction.tableAVals.min,
                 slide: (event, ui) => {
                     const aSliderVal = ui.value;
-                    $('#a_value').html('(' + aSliderVal + ')');
-
-                    ////////////////////////////
-                    // Update the chart title.
-                    ////////////////////////////
-                    $('#chart_taylor_title').html(
-                        'Taylor Series Approximation: ' +
-                            titleExpression +
-                            `, degree=${$('#chart_taylor_slider_n').slider(
-                                'value'
-                            )}, a=${aSliderVal}`
-                    );
-                    if (aSliderVal == 0) {
-                        $('#chart_taylor_title').html(
-                            $('#chart_taylor_title').html() +
-                                ' (Maclauren Series)'
-                        );
-                    }
-
-                    ////////////////////////////
-                    // Update the chart values
-                    ////////////////////////////
-                    option = taylorChart.generateChart(
+                    updateGraph(
+                        taylorChart,
+                        myChart,
                         selectedFunction,
-                        $('#chart_taylor_slider_n').slider('value'),
+                        null,
                         aSliderVal
                     );
-                    option && myChart.setOption(option, true);
-
-                    const chartData = taylorChart.getChartData();
-                    buildTable(taylorChart);
                 },
                 step: 1,
                 value: 0,
@@ -197,40 +210,26 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
                 min: 0,
                 slide: (event, ui) => {
                     const nSliderVal = ui.value;
-                    $('#n_value').html('(' + nSliderVal + ')');
-
-                    ////////////////////////////
-                    // Update the chart title.
-                    ////////////////////////////
-                    $('#chart_taylor_title').html(
-                        'Taylor Series Approximation: ' +
-                            titleExpression +
-                            `, degree=${nSliderVal}, ` +
-                            `a=${$('#chart_taylor_slider_a').slider('value')}`
-                    );
-                    if ($('#chart_taylor_slider_a').slider('value') == 0) {
-                        $('#chart_taylor_title').html(
-                            $('#chart_taylor_title').html() +
-                                ' (Maclauren Series)'
-                        );
-                    }
-
-                    ////////////////////////////
-                    // Update the chart values
-                    ////////////////////////////
-                    option = taylorChart.generateChart(
+                    console.log(nSliderVal);
+                    updateGraph(
+                        taylorChart,
+                        myChart,
                         selectedFunction,
                         nSliderVal,
-                        $('#chart_taylor_slider_a').slider('value')
+                        null
                     );
-                    option && myChart.setOption(option, true);
-
-                    const chartData = taylorChart.getChartData();
-                    buildTable(taylorChart);
                 },
                 step: 1,
                 value: selectedFunction.terms.length - 1,
             });
+
+            updateGraph(
+                taylorChart,
+                myChart,
+                selectedFunction,
+                selectedFunction.terms.length - 1,
+                0
+            );
         });
     }
 
