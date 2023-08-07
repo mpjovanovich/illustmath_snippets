@@ -147,7 +147,6 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
             // If the chart option exists (is should - this is a sanity check), display the chart.
             const taylorChart = new taylorGraph.TaylorChart();
             let selectedFunction = taylorChart.functionDefinitions.e_pow_x;
-            let option;
 
             ///////////////////////////////
             // Set up the function selector.
