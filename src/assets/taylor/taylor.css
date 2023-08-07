@@ -10,6 +10,7 @@
     font-size: 14px !important;
     font-family: Helvetica, Arial, sans-serif;
 }
+
 .katex {
     font-weight: bold !important;
 }
@@ -23,10 +24,22 @@
     text-align: justify !important;
     font-style: italic !important;
 }
+th.taylor_equation {
+    min-width: 180px;
+}
+
+p {
+    margin-bottom: 10px;
+}
 table {
     width: 640px !important;
     margin: 0 !important;
     font-size: 1em !important;
+}
+table td {
+    background-color: #fff !important;
+    padding: 10px !important;
+    border-bottom: 1px solid #ccc !important;
 }
 table th {
     background-color: #c5c5c5 !important;
@@ -40,12 +53,4 @@ table tr:nth-child(even) td {
 }
 table tr:nth-child(2) td {
     background-color: #ffedcc !important;
-}
-table td {
-    background-color: #fff !important;
-    padding: 10px !important;
-    border-bottom: 1px solid #ccc !important;
-}
-p {
-    margin-bottom: 10px;
 }

@@ -229,7 +229,7 @@ define(['mathjs'], (mathjs) => {
                 );
 
                 termsSeries.push({
-                    name: 'n=' + fIndex,
+                    name: 'term' + fIndex,
                     data: curData,
                     showSymbol: false,
                     type: 'line',
@@ -267,7 +267,7 @@ define(['mathjs'], (mathjs) => {
             sum = sum.map((x) => mathjs.round(x, this.#VALUE_PRECISION));
 
             return {
-                name: 'nth sum',
+                name: 'g(x)',
                 data: sum,
                 // makes the legend and tooltip match the line color.
                 itemStyle: {
