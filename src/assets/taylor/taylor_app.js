@@ -154,9 +154,10 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
             ///////////////////////////////
             // Render tex
             $('.tex').each((index, element) => {
-                katex.render($(element).text(), $(element)[0], {
+                const tex = katex.renderToString($(element).text(), {
                     throwOnError: false,
                 });
+                $(element).text(tex);
             });
 
             // Radio controls
