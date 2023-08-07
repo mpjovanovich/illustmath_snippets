@@ -5,7 +5,7 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
     katex,
     taylorGraph
 ) => {
-    function addChartRow(dataSet, a) {
+    function addChartRow(dataSet, a, n) {
         let tr = $('<tr>');
 
         tr.append(
@@ -21,7 +21,9 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
             $('<th class="taylor_equation">', { scope: 'row' }).append(
                 $(
                     katex.renderToString(
-                        dataSet.texValue.replace(new RegExp('#A', 'g'), a),
+                        dataSet.texValue
+                            .replace(new RegExp('#A', 'g'), a)
+                            .replace(new RegExp('#N', 'g'), n),
                         {
                             throwOnError: false,
                         }
@@ -54,11 +56,11 @@ define(['jquery', 'jqueryui', 'echarts', 'katex', 'taylorGraph'], (
         tbody.append(tr);
 
         // Data rows - y values
-        addChartRow(chartData.delta, chartData.a).appendTo(tbody);
-        addChartRow(chartData.fx, chartData.a).appendTo(tbody);
-        addChartRow(chartData.sum, chartData.a).appendTo(tbody);
+        addChartRow(chartData.delta, chartData.a, chartData.n).appendTo(tbody);
+        addChartRow(chartData.fx, chartData.a, chartData.n).appendTo(tbody);
+        addChartRow(chartData.sum, chartData.a, chartData.n).appendTo(tbody);
         chartData.terms.forEach((term) => {
-            addChartRow(term, chartData.a).appendTo(tbody);
+            addChartRow(term, chartData.a, chartData.n).appendTo(tbody);
         });
 
         table[0].append(tbody[0]);

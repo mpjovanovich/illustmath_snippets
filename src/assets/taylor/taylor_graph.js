@@ -169,7 +169,7 @@ define(['mathjs'], (mathjs) => {
                 sum: {
                     texLabel: 'g(x)',
                     texValue:
-                        '\\sum_{n=0}^{\\infty}\\frac{f^{n}(#A)}{n!} (x-#A)^{n}',
+                        '\\sum_{n=0}^{#N}\\frac{f^{n}(#A)}{n!} (x-#A)^{n}',
                     data: [],
                 },
                 delta: {
