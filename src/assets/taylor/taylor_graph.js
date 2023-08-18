@@ -71,28 +71,28 @@ define(['mathjs'], (mathjs) => {
                     ),
                     this.#createFunctionDefinition(
                         (x, a) => (1.0 / mathjs.pow(1 - a, 2)) * (x - a),
-                        '\\frac{1*1!}{(1-x)^2}(x-#A)'
+                        '\\frac{1*1!}{(1-#A)^2}(x-#A)'
                     ),
                     this.#createFunctionDefinition(
                         (x, a) =>
                             ((2.0 * mathjs.factorial(2)) /
                                 mathjs.pow(1 - a, 3)) *
                             mathjs.pow(x - a, 2),
-                        '\\frac{2*2!}{(1-x)^3}(x-#A)^2'
+                        '\\frac{2*2!}{(1-#A)^3}(x-#A)^2'
                     ),
                     this.#createFunctionDefinition(
                         (x, a) =>
                             ((6.0 * mathjs.factorial(3)) /
                                 mathjs.pow(1 - a, 4)) *
                             mathjs.pow(x - a, 3),
-                        '\\frac{6*3!}{(1-x)^4}(x-#A)^3'
+                        '\\frac{6*3!}{(1-#A)^4}(x-#A)^3'
                     ),
                     this.#createFunctionDefinition(
                         (x, a) =>
                             ((24.0 * mathjs.factorial(4)) /
                                 mathjs.pow(1 - a, 5)) *
                             mathjs.pow(x - a, 4),
-                        '\\frac{24*4!}{(1-x)^5}(x-#A)^4'
+                        '\\frac{24*4!}{(1-#A)^5}(x-#A)^4'
                     ),
                 ],
             },
