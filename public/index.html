@@ -1,0 +1,132 @@
+<!-- 
+This snippet will run in a Jupyter notebook cell, so we're just putting in the
+essential pieces of the HTML document. The JS will populate the rest of the
+content.
+-->
+<!DOCTYPE html>
+<head>
+    <title>Taylor Series</title>
+    <!-- data-main should point to the entry point for the 'main application' script. -->
+    <link
+        rel="stylesheet"
+        href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css"
+    />
+    <link
+        id="last_link"
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"
+        integrity="sha384-GvrOXuhMATgEsSwCs4smul74iXGOixntILdUW9XmUC6+HX0sLNAK3q71HotJqlAn"
+        crossorigin="anonymous"
+    />
+    <script
+        data-main="/src/assets/taylor/taylor_main.js"
+        src="https://requirejs.org/docs/release/2.3.6/minified/require.js"
+    ></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyByYiDk5XIQqM8cqv8HOAFVZSI8_-VWvZQ",
+          authDomain: "illustrated-math-taylor-series.firebaseapp.com",
+          projectId: "illustrated-math-taylor-series",
+          storageBucket: "illustrated-math-taylor-series.appspot.com",
+          messagingSenderId: "636160386771",
+          appId: "1:636160386771:web:b71f256417eac83fde1626"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+      </script>
+</head>
+<body>
+    <div id="body_wrapper">
+        <h1>Taylor Series by Visual Example</h1>
+        <div id="taylor_container">
+            <fieldset id="functions">
+                <legend>Select a function:</legend>
+                <label class="tex" for="e_pow_x">e^x</label>
+                <input
+                    class="functionSelector"
+                    type="radio"
+                    name="function"
+                    id="e_pow_x"
+                />
+                <label class="tex" for="one_over_one_minus_x">1/(1-x)</label>
+                <input
+                    class="functionSelector"
+                    type="radio"
+                    name="function"
+                    id="one_over_one_minus_x"
+                />
+                <label class="tex" for="sin_x">sin(x)</label>
+                <input
+                    class="functionSelector"
+                    type="radio"
+                    name="function"
+                    id="sin_x"
+                />
+            </fieldset>
+            <div style="width: fit-content">
+                <h3 id="chart_taylor_title" style="text-align: center"></h3>
+                <div id="chart_taylor"></div>
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                        width: fit-content;
+                        margin: 0 auto;
+                    "
+                >
+                    <span style="font-weight: bold; margin-right: 20px">n:</span>
+                    <div
+                        id="chart_taylor_slider_n"
+                        class="slider"
+                        style="width: 300px; margin: auto"
+                    ></div>
+                    <span id="n_value" style="font-weight: bold; margin-left: 20px"
+                        >()</span
+                    >
+                </div>
+                <div
+                    style="
+                        display: flex;
+                        justify-content: center;
+                        width: fit-content;
+                        margin: 0 auto;
+                    "
+                >
+                    <span style="font-weight: bold; margin-right: 20px">a:</span>
+                    <div
+                        id="chart_taylor_slider_a"
+                        class="slider"
+                        style="width: 300px; margin: auto"
+                    ></div>
+                    <span id="a_value" style="font-weight: bold; margin-left: 20px"
+                        >()</span
+                    >
+                </div>
+            </div>
+            <ul>
+                <li>
+                    The 'n' slider can be used to adjust the number of terms in the
+                    Taylor series.
+                </li>
+                <li>
+                    The 'a' slider can be used to adjust the summation function's 'a'
+                    value.
+                </li>
+                <li>
+                    The delta row of the chart, _f(x) - g(x)_, has been highlighted in
+                    yellow for accent.
+                </li>
+                <li>
+                    Hovering over the graph will show the values of the functions
+                    relevant to the series.
+                </li>
+            </ul>
+            <table id="table_taylor"></table>
+        </div>
+    </div>
+</body>
